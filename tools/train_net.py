@@ -30,6 +30,7 @@ def main(args):
     cfg = setup(args)
 
     if args.eval_only:
+        import ipdb;ipdb.set_trace()
         cfg.defrost()
         cfg.MODEL.BACKBONE.PRETRAIN = False
         model = DefaultTrainer.build_model(cfg)

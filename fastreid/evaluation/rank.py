@@ -105,8 +105,8 @@ def eval_market1501(distmat, q_pids, g_pids, q_camids, g_camids, max_rank):
     if num_g < max_rank:
         max_rank = num_g
         print('Note: number of gallery samples is quite small, got {}'.format(num_g))
-
-    indices = np.argsort(distmat, axis=1)
+    import ipdb;ipdb.set_trace()
+    indices = np.argsort(distmat, axis=1)# 元素值从小到大排序后的索引值的数组
     # compute cmc curve for each query
     all_cmc = []
     all_AP = []

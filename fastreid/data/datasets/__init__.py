@@ -16,6 +16,7 @@ It must returns an instance of :class:`Backbone`.
 from .cuhk03 import CUHK03
 from .dukemtmcreid import DukeMTMC
 from .market1501 import Market1501
+from .market9601 import Market9601
 from .msmt17 import MSMT17
 from .AirportALERT import AirportALERT
 from .iLIDS import iLIDS

@@ -1,7 +1,7 @@
 _BASE_: ../Base-bagtricks.yml
 
 DATASETS:
-  NAMES: ("Market1501",)
-  TESTS: ("Market1501",)
+  NAMES: ("Market9601",)
+  TESTS: ("Market9601",)
 
-OUTPUT_DIR: logs/market1501/bagtricks_R50
+OUTPUT_DIR: logs/market9601/bagtricks_R50

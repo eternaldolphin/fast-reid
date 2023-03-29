@@ -97,13 +97,20 @@ class Baseline(nn.Module):
         return self.pixel_mean.device
 
     def forward(self, batched_inputs):
+        '''['images', 'targets', 'camids', 'img_paths']
+        'images': [128, 3, 256, 128]
+        'targets': [128]
+        'camids': [128]
+        'img_paths': list=128
+        '''
         images = self.preprocess_image(batched_inputs)
-        features = self.backbone(images)
+        
+        features = self.backbone(images)# [128, 3, 256, 128]->[128, 1280, 16, 8]
 
         if self.training:
             assert "targets" in batched_inputs, "Person ID annotation are missing in training!"
             targets = batched_inputs["targets"]
-
+            import ipdb;ipdb.set_trace()
             # PreciseBN flag, When do preciseBN on different dataset, the number of classes in new dataset
             # may be larger than that in the original dataset, so the circle/arcface will
             # throw an error. We just set all the targets to 0 to avoid this problem.
@@ -113,7 +120,8 @@ class Baseline(nn.Module):
             losses = self.losses(outputs, targets)
             return losses
         else:
-            outputs = self.heads(features)
+            # import ipdb;ipdb.set_trace()
+            outputs = self.heads(features)# [128, 1280, 16, 8]->[128, 1280]
             return outputs
 
     def preprocess_image(self, batched_inputs):

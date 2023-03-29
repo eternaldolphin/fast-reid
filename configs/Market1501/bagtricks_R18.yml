@@ -1,0 +1,14 @@
+_BASE_: ../Base-bagtricks.yml
+
+MODEL:
+
+  BACKBONE:
+    DEPTH: 18x
+    FEAT_DIM: 512
+
+
+DATASETS:
+  NAMES: ("Market9601",)
+  TESTS: ("Market9601",)
+
+OUTPUT_DIR: logs/market9601/bagtricks_R18

@@ -62,22 +62,22 @@ class ReidEvaluator(DatasetEvaluator):
         pids = []
         camids = []
         for prediction in predictions:
-            features.append(prediction['feats'])
-            pids.append(prediction['pids'])
-            camids.append(prediction['camids'])
-
-        features = torch.cat(features, dim=0)
-        pids = torch.cat(pids, dim=0).numpy()
-        camids = torch.cat(camids, dim=0).numpy()
+            features.append(prediction['feats'])# [113, 1280]
+            pids.append(prediction['pids'])# [113]
+            camids.append(prediction['camids'])# [113]
+        # import ipdb;ipdb.set_trace()
+        features = torch.cat(features, dim=0)# [113, 1280]
+        pids = torch.cat(pids, dim=0).numpy()# (113,)
+        camids = torch.cat(camids, dim=0).numpy()# (113,)
         # query feature, person ids and camera ids
-        query_features = features[:self._num_query]
-        query_pids = pids[:self._num_query]
-        query_camids = camids[:self._num_query]
+        query_features = features[:self._num_query]# [9, 1280]
+        query_pids = pids[:self._num_query]# (9,)
+        query_camids = camids[:self._num_query]# (9,)
 
         # gallery features, person ids and camera ids
-        gallery_features = features[self._num_query:]
-        gallery_pids = pids[self._num_query:]
-        gallery_camids = camids[self._num_query:]
+        gallery_features = features[self._num_query:]# [104, 1280]
+        gallery_pids = pids[self._num_query:]# (104,)
+        gallery_camids = camids[self._num_query:]# (104,)
 
         self._results = OrderedDict()
 
@@ -89,7 +89,7 @@ class ReidEvaluator(DatasetEvaluator):
             query_features, gallery_features = aqe(query_features, gallery_features, qe_time, qe_k, alpha)
 
         dist = build_dist(query_features, gallery_features, self.cfg.TEST.METRIC)
-
+        # [9, 1280] [104, 1280] 'cosine' -> (9, 104)
         if self.cfg.TEST.RERANK.ENABLED:
             logger.info("Test with rerank setting")
             k1 = self.cfg.TEST.RERANK.K1
@@ -105,11 +105,11 @@ class ReidEvaluator(DatasetEvaluator):
 
         from .rank import evaluate_rank
         cmc, all_AP, all_INP = evaluate_rank(dist, query_pids, gallery_pids, query_camids, gallery_camids)
-
-        mAP = np.mean(all_AP)
-        mINP = np.mean(all_INP)
+        # (9, 104) (9,) (104,) (9,) (104,)->(50,)啥意思？ (9,) (9,)
+        mAP = np.mean(all_AP)# 0.85567987
+        mINP = np.mean(all_INP)# 0.5896098
         for r in [1, 5, 10]:
-            self._results['Rank-{}'.format(r)] = cmc[r - 1] * 100
+            self._results['Rank-{}'.format(r)] = cmc[r - 1] * 100 #TODO: rank-1 
         self._results['mAP'] = mAP * 100
         self._results['mINP'] = mINP * 100
         self._results["metric"] = (mAP + cmc[0]) / 2 * 100

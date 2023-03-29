@@ -1,0 +1,16 @@
+_BASE_: ../Base-bagtricks.yml
+
+MODEL:
+
+  BACKBONE:
+    NAME: build_repvgg_backbone
+    DEPTH: A0
+    FEAT_DIM: 1280
+    PRETRAIN_PATH: '/home/gyl/.cache/torch/checkpoints/RepVGG-A0-train.pth'
+
+
+DATASETS:
+  NAMES: ("Market9601",)
+  TESTS: ("Market9601",)
+
+OUTPUT_DIR: logs/market9601/bagtricks_Repvgg
