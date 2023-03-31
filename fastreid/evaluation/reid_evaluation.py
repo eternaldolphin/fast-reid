@@ -102,7 +102,10 @@ class ReidEvaluator(DatasetEvaluator):
 
             rerank_dist = build_dist(query_features, gallery_features, metric="jaccard", k1=k1, k2=k2)
             dist = rerank_dist * (1 - lambda_value) + dist * lambda_value
-
+        # import ipdb;ipdb.set_trace()
+        indices = np.argsort(dist, axis=1)
+        return indices
+        '''
         from .rank import evaluate_rank
         cmc, all_AP, all_INP = evaluate_rank(dist, query_pids, gallery_pids, query_camids, gallery_camids)
         # (9, 104) (9,) (104,) (9,) (104,)->(50,)啥意思？ (9,) (9,)
@@ -124,7 +127,7 @@ class ReidEvaluator(DatasetEvaluator):
                 self._results["TPR@FPR={:.0e}".format(fpr)] = tprs[ind]
 
         return copy.deepcopy(self._results)
-
+        '''
     def _compile_dependencies(self):
         # Since we only evaluate results in rank(0), so we just need to compile
         # cython evaluation tool on rank(0)

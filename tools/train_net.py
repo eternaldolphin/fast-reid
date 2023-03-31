@@ -30,14 +30,13 @@ def main(args):
     cfg = setup(args)
 
     if args.eval_only:
-        import ipdb;ipdb.set_trace()
         cfg.defrost()
         cfg.MODEL.BACKBONE.PRETRAIN = False
         model = DefaultTrainer.build_model(cfg)
 
         Checkpointer(model).load(cfg.MODEL.WEIGHTS)  # load trained model
-
-        res = DefaultTrainer.test(cfg, model)
+        res = DefaultTrainer.test(cfg, model)# res['Market9601'].shape=(9, 104)
+        import ipdb;ipdb.set_trace()
         return res
 
     trainer = DefaultTrainer(cfg)
